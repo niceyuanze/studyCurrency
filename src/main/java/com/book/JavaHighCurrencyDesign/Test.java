@@ -1,5 +1,9 @@
 package com.book.JavaHighCurrencyDesign;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -10,36 +14,33 @@ import java.util.stream.LongStream;
  * Created by niceyuanze on 17-5-7.
  */
 public class Test {
-    private final static Integer x = 123;
+    static class Person{
+        int x;
 
-    public static class XXX extends Thread{
-
-        public XXX(String name) {
-            super(name);
+        public Person(int x) {
+            this.x = x;
         }
 
-        @Override
-        public void run() {
-            System.out.println(Thread.currentThread().getName());
-            System.out.println(x);
-            synchronized (x){
+        public int getX() {
+            return x;
+        }
 
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+        public void setX(int x) {
+            this.x = x;
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        Thread t1 = new XXX("t1");
-        Thread t2 = new XXX("t2");
-        t1.start();
-        Thread.sleep(1000);
-        t2.start();
-        t1.join();
-        t2.join();
+    public static void main(String[] args) throws InterruptedException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+        List<Person> persons = new ArrayList<>();
+        Person person1 = new Person(1);
+        Person person2 = new Person(2);
+        persons.add(person1);
+        persons.add(person2);
+        persons.stream()
+                .map(x -> new Person(x.getX()+1))
+                .forEach(x -> System.out.println(x.getX()));
+
+        persons.stream().forEach(x -> System.out.println(x.getX()));
+
     }
 }
